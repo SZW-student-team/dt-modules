@@ -1,0 +1,18 @@
+[project]
+name = "dt-modules"
+version = "0.1.0"
+description = "dt-modules is python package which allows data team members the create visualizations with ease."
+readme = "README.md"
+authors = [
+    { name = "vijay_sankar" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "pandas>=2.2.3",
+    "plotly>=6.0.1",
+    "ruff>=0.11.2",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
