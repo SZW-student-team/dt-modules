@@ -2,7 +2,7 @@
 
 import pandas as pd
 
-from dt_modules import PlotlyBarChart, blue_colors
+from dt_modules import PlotlyBarChart, PlotlyPieChart, blue_colors
 
 
 def main():
@@ -13,9 +13,13 @@ def main():
 
     df = pd.DataFrame(data)
 
-    bar_chart = PlotlyBarChart(df, x="sectoren", y="uitstroom", column_to_color="sectoren", colors=blue_colors)
-    bar_chart.save("./exports/bar_chart.png")
-    bar_chart.save_json("./exports/bar_chart.export.json")
+    # bar_chart = PlotlyBarChart(df, x="sectoren", y="uitstroom", column_to_color="sectoren", colors=blue_colors)
+    # bar_chart.save("./exports/bar_chart.png")
+    # bar_chart.save_json("./exports/bar_chart.export.json")
+
+    pie_chart = PlotlyPieChart(data=df, values="uitstroom", names="sectoren", colors=blue_colors)
+    pie_chart.save("./exports/pie_chart.png")
+    pie_chart.save_json("./exports/pie_chart.export.json")
 
 
 if __name__ == "__main__":

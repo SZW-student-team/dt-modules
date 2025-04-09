@@ -45,6 +45,19 @@ class BarChart(ABC):
         return self.visual
 
 
+class PieChart(ABC):
+    @abstractmethod
+    def __init__(self, data: Any, values: str, names: str, visual, colors: list[str]):
+        self.data = data
+        self.value = values
+        self.names = names
+        self.visual = visual
+        self.colors = colors
+
+    def get_visual(self):
+        return self.visual
+
+
 class PlotlyBarChart(BarChart, Savable):
     def __init__(
         self, data: Any, x: str, y: str, column_to_color: str, colors: list[str]
@@ -77,6 +90,38 @@ class PlotlyBarChart(BarChart, Savable):
             "y": self.y,
             "column_to_color": self.column_to_color,
             "colors": self.colors,
+        }
+
+        with open(location, "w") as f:
+            json.dump(export, f)
+
+
+class PlotlyPieChart(PieChart, Savable):
+    def __init__(self, data: Any, values: str, names: str, colors: list[str]):
+        visual = px.pie(
+            data,
+            values=values,
+            names=names,
+            color=data[names],
+            color_discrete_sequence=fill(len(values), colors),
+        )
+        visual.update_layout(plot_bgcolor="white")
+
+        super().__init__(data, values, names, visual, colors)
+
+    def save(self, location: str):
+        print("saving the pie chart")
+        self.visual.write_image(location)
+
+    def save_json(self, location):
+        print("exporting the bar chart")
+
+        export = {
+            "visual_type": "pie_chart",
+            "renderer": "plotly",
+            "visual": json.loads(
+                self.visual.to_json()
+            ),  # This isn't optimal but it works, for now.
         }
 
         with open(location, "w") as f:
