@@ -4,7 +4,8 @@ import plotly.express as px
 import json
 
 
-blue_colors = ["#154273", "#4f7196", "#738eab", "#95a9c0", "#b8c6d5", "#dce3ea"]
+blue_colors = ["#154273", "#4F7196", "#738EAB", "#95A9C0", "#B8C6D5", "#DCE3EA"]
+rubine_red = ["#CA005D", "#D74085", "#DF669D", "#E78CB6", "#EFB2CE", "#F7D9E7"]
 
 
 # TODO: implement this with these colors: https://www.rijkshuisstijl.nl/publiek/modules/product/DigitalStyleGuide/default/index.aspx?ItemId=9247
