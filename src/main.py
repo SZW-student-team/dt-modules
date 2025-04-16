@@ -1,30 +1,54 @@
-# TODO: lettertype
+# TODO: font (no access to font files!), spread charts
 
 import pandas as pd
 
-from dt_modules import PlotlyBarChart, PlotlyPieChart, blue_colors
-from dt_modules import __init2__
+from dt_modules import BarChart, PieChart, Table, blue_colors, rubine_red
 
 
 def main():
+    sectors = [
+        "Landbouw, bosbouw en visserij",
+        "Winning van delfstoffen",
+        "Industrie",
+        "Productie en distributie van en handel in elektriciteit, aardgas, stoom en gekoelde lucht",
+        "Winning en distributie van water, afval- en afvalwaterbeheer en sanering",
+        "Bouwnijverheid",
+        "Groot- en detailhandel, reparatie van auto’s",
+        "Vervoer en opslag",
+        "Logies-, maaltijd- en drankverstrekking",
+        "Informatie en communicatie",
+        "Financiële instellingen",
+        "Verhuur van en handel in onroerend goed",
+        "Advisering, onderzoek en overige specialistische zakelijke dienstverlening",
+        "Verhuur van roerende goederen en overige zakelijke dienstverlening",
+        "Openbaar bestuur, overheidsdiensten en verplichte sociale verzekeringen",
+        "Onderwijs",
+        "Gezondheids- en welzijnszorg",
+        "Cultuur, sport en recreatie",
+        "Overige dienstverlening",
+        "Huishoudens als werkgever, niet-gedifferentieerde productie van goederen en diensten door huishoudens voor eigen gebruik",
+        "Extraterritoriale organisaties en lichamen"
+    ]
     data = {
         'sectoren': ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U'],
         'uitstroom': [63589, 7615, 689794, 22133, 34755, 335913, 894066, 304780, 162482, 198830, 234537, 57592, 409602, 493306, 472004, 398288, 884573, 74078, 103002, 12192, 630],
+        'sector_namen': sectors,
     }
 
     df = pd.DataFrame(data)
 
-    # bar_chart = PlotlyBarChart(df, x="sectoren", y="uitstroom", column_to_color="sectoren", colors=blue_colors)
-    # bar_chart.save("./exports/bar_chart.png")
-    # bar_chart.save_json("./exports/bar_chart.export.json")
+    bar_chart = BarChart(df, x="sectoren", y="uitstroom", column_to_color="sectoren", colors=blue_colors)
+    # bar_chart.save_image("./exports/bar_chart.png")
+    bar_chart.save_json("./exports/bar_chart.export.json")
 
-    # pie_chart = PlotlyPieChart(data=df, values="uitstroom", names="sectoren", colors=blue_colors)
-    # pie_chart.save("./exports/pie_chart.png")
-    # pie_chart.save_json("./exports/pie_chart.export.json")
+    pie_chart = PieChart(data=df, values="uitstroom", names="sectoren", colors=rubine_red)
+    # pie_chart.save_image("./exports/pie_chart.png")
+    pie_chart.save_json("./exports/pie_chart.export.json")
 
-    bar_chart = __init2__.BarChart(df, x="sectoren", y="uitstroom", column_to_color="sectoren", colors=blue_colors)
-    bar_chart.save_image("./exports/bar_chart2.png")
-    bar_chart.save_json("./exports/bar_chart2.export.json")
+    headers = ["Letters", "Beschrijvingen"]
+    cells = [df["sectoren"].head(5), df["sector_namen"].head(5)]
+    table = Table(headers=headers, cells=cells, alternate_row_color=True)
+    table.save_json("./exports/table.export.json")
 
 
 if __name__ == "__main__":
