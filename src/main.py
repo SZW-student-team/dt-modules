@@ -38,7 +38,7 @@ def main():
     df = pd.DataFrame(data)
 
     bar_chart = BarChart(df, x="sectoren", y="uitstroom", column_to_color="sectoren", colors=blue_colors)
-    # bar_chart.save_image("./exports/bar_chart.png")
+    # # bar_chart.save_image("./exports/bar_chart.png")
     bar_chart.save_json("./exports/bar_chart.export.json")
 
     pie_chart = PieChart(data=df, values="uitstroom", names="sectoren", colors=rubine_red)

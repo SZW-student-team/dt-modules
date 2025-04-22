@@ -22,12 +22,12 @@ def fill(to: int, colors: list[str]) -> list[str]:
     return new_colors
 
 
-# TODO: add the correct font: https://www.rijkshuisstijl.nl/publiek/modules/product/DigitalStyleGuide/default/index.aspx?ItemId=6745
 def apply_default_style(figure):
-    """Applies the default font and a white background to the given `figure`."""
+    """Applies the default (RijksoverheidSansText) font and a white background to the given `figure`."""
 
     figure.update_layout(
-        font_family="Arial",
+        font_family="RijksoverheidSansText",
+        # font_family="Arial",
         plot_bgcolor="white",
     )
 
