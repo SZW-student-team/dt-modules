@@ -6,6 +6,7 @@ from typing import Any
 import json
 
 
+# TODO: add all colors.
 blue_colors = ["#154273", "#4F7196", "#738EAB", "#95A9C0", "#B8C6D5", "#DCE3EA"]
 rubine_red = ["#CA005D", "#D74085", "#DF669D", "#E78CB6", "#EFB2CE", "#F7D9E7"]
 
@@ -23,12 +24,12 @@ def fill(to: int, colors: list[str]) -> list[str]:
 
 
 def apply_default_style(figure):
-    """Applies the default (RijksoverheidSansText) font and a white background to the given `figure`."""
+    """Applies the default font (RijksoverheidSansText) and a white background to the given `figure`."""
 
     figure.update_layout(
         font_family="RijksoverheidSansText",
         # font_family="Arial",
-        plot_bgcolor="white",
+        # plot_bgcolor="white",
     )
 
 
@@ -63,8 +64,8 @@ class Figure(Savable):
         apply_default_style(self.figure)
 
     @classmethod
-    def from_figure(cls, figure):
-        """Creates the `Figure` instance from the given plotly figure."""
+    def figure(cls, figure):
+        """Uses the given plotly `figure` without default configuration."""
 
         return Figure(figure)
 
@@ -74,7 +75,13 @@ class Figure(Savable):
 
 class BarChart(Figure):
     def __init__(
-        self, data: Any, x: str, y: str, column_to_color: str, colors: list[str]
+        self,
+        data: Any,
+        x: str,
+        y: str,
+        column_to_color: str,
+        colors: list[str],
+        **kwargs,
     ):
         figure = px.bar(
             data,
@@ -82,20 +89,24 @@ class BarChart(Figure):
             y=y,
             color=data[column_to_color],
             color_discrete_sequence=fill(len(x), colors),
+            **kwargs,
         )
+        figure.update_layout(plot_bgcolor="white")
 
         super().__init__(figure)
 
 
 class PieChart(Figure):
-    def __init__(self, data: Any, values: str, names: str, colors: list[str]):
+    def __init__(self, data, values: str, names: str, colors: list[str], **kwargs):
         figure = px.pie(
             data,
             values=values,
             names=names,
             color=data[names],
             color_discrete_sequence=fill(len(values), colors),
+            **kwargs,
         )
+        figure.update_layout(plot_bgcolor="white")
 
         super().__init__(figure)
 
@@ -108,11 +119,12 @@ class Table(Figure):
         header_color=blue_colors[0],
         cells_color=blue_colors[4],
         line_color="darkslategray",
-        alternate_row_color=False,
+        alternate_row=False,
         background_color="white",
+        **kwargs,
     ):
         row_colors = background_color
-        if alternate_row_color:
+        if alternate_row:
             row_amount = len(cells[0])
             row_colors = [[background_color, cells_color] * row_amount]
 
@@ -131,7 +143,50 @@ class Table(Figure):
                         fill_color=row_colors,
                     ),
                 )
-            ]
+            ],
+            **kwargs,
+        )
+        figure.update_layout(plot_bgcolor="white")
+
+        super().__init__(figure)
+
+
+class ScatterPlot(Figure):
+    def __init__(self, figure=None, x: str | list = [], y: str | list = [], **kwargs):
+        figure = px.scatter(
+            x=x,
+            y=y,
+            color=fill(len(x), [blue_colors[0], rubine_red[0]]),
+            color_discrete_map="identity",
+            **kwargs,
+        )
+
+        super().__init__(figure)
+
+
+class Histogram(Figure):
+    def __init__(self, data, x: str, nbins: int = 10, **kwargs):
+        figure = px.histogram(
+            data,
+            x=x,
+            nbins=nbins,
+            color=fill(len(data), [blue_colors[0]]),
+            color_discrete_map="identity",
+            **kwargs,
+        )
+
+        super().__init__(figure)
+
+
+class LineChart(Figure):
+    def __init__(self, data, x: str, y: str, color: str, **kwargs):
+        figure = px.line(
+            data,
+            x=x,
+            y=y,
+            color=color,
+            color_discrete_sequence=fill(len(data[y]), [blue_colors[0], rubine_red[0]]),
+            **kwargs,
         )
 
         super().__init__(figure)
