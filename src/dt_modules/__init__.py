@@ -5,8 +5,10 @@ from abc import ABC, abstractmethod
 from typing import Any
 import json
 
+from dt_modules.coloring import government_theme, quantitative_colors
 
-# TODO: add all colors.
+
+# TODO: add the colors to the coloring module.
 blue_colors = ["#154273", "#4F7196", "#738EAB", "#95A9C0", "#B8C6D5", "#DCE3EA"]
 rubine_red = ["#CA005D", "#D74085", "#DF669D", "#E78CB6", "#EFB2CE", "#F7D9E7"]
 
@@ -23,8 +25,36 @@ def fill(to: int, colors: list[str]) -> list[str]:
     return new_colors
 
 
+def fill_defaul_colors(to: int, theme: dict[str, dict[str, str]], color_names: list[str]) -> list[str]:
+    """Generates a list of colors based on a given `theme`, repeating color names and adjusting their intensity."""
+
+    length = len(color_names)
+    new_colors = []
+    used_colors = {}
+
+    for i in range(0, to):
+        color_name = color_names[i % length]
+
+        if color_name not in used_colors:
+            used_colors[color_name] = 100
+        else:
+            if used_colors[color_name] == 100:
+                used_colors[color_name] = 75
+
+            elif used_colors[color_name] == 15:
+                used_colors[color_name] == 100
+
+            else:
+                used_colors[color_name] -= 15
+
+        percentage = f"{used_colors[color_name]}%"
+        new_colors.append(theme[color_name][percentage])
+
+    return new_colors
+
+
 def apply_default_style(figure):
-    """Applies the default font (RijksoverheidSansText) and a white background to the given `figure`."""
+    """Applies the default font (RijksoverheidSansText) to the given `figure`."""
 
     figure.update_layout(
         font_family="RijksoverheidSansText",
@@ -80,15 +110,20 @@ class BarChart(Figure):
         x: str,
         y: str,
         column_to_color: str,
-        colors: list[str],
+        colors: list[str] | None = None,
         **kwargs,
     ):
+        if colors is None:
+            colors = fill_defaul_colors(len(data[x]), government_theme, quantitative_colors)
+        else:
+            colors = fill(len(data[x]), colors)
+
         figure = px.bar(
             data,
             x=x,
             y=y,
             color=data[column_to_color],
-            color_discrete_sequence=fill(len(x), colors),
+            color_discrete_sequence=colors,
             **kwargs,
         )
         figure.update_layout(plot_bgcolor="white")
@@ -97,13 +132,20 @@ class BarChart(Figure):
 
 
 class PieChart(Figure):
-    def __init__(self, data, values: str, names: str, colors: list[str], **kwargs):
+    def __init__(self, data, values: str, names: str, colors: list[str] = None, **kwargs):
+        length = len(values)
+
+        if colors is None:
+            colors = fill_defaul_colors(length, government_theme, quantitative_colors)
+        else:
+            colors = fill(length, colors)
+
         figure = px.pie(
             data,
             values=values,
             names=names,
             color=data[names],
-            color_discrete_sequence=fill(len(values), colors),
+            color_discrete_sequence=fill(length, colors),
             **kwargs,
         )
         figure.update_layout(plot_bgcolor="white")
@@ -178,6 +220,7 @@ class Histogram(Figure):
         super().__init__(figure)
 
 
+# TODO: make it easier to select a color for a line.
 class LineChart(Figure):
     def __init__(self, data, x: str, y: str, color: str, **kwargs):
         figure = px.line(
@@ -186,6 +229,18 @@ class LineChart(Figure):
             y=y,
             color=color,
             color_discrete_sequence=fill(len(data[y]), [blue_colors[0], rubine_red[0]]),
+            **kwargs,
+        )
+
+        super().__init__(figure)
+
+
+class BoxPlot(Figure):
+    def __init__(self, data, x: str, color: str, **kwargs):
+        figure = px.box(
+            data,
+            x=x,
+            color=color,
             **kwargs,
         )
 
