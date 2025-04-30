@@ -25,7 +25,7 @@ def fill(to: int, colors: list[str]) -> list[str]:
     return new_colors
 
 
-def fill_defaul_colors(to: int, theme: dict[str, dict[str, str]], color_names: list[str]) -> list[str]:
+def fill_default_colors(to: int, theme: dict[str, dict[str, str]], color_names: list[str]) -> list[str]:
     """Generates a list of colors based on a given `theme`, repeating color names and adjusting their intensity."""
 
     length = len(color_names)
@@ -47,7 +47,7 @@ def fill_defaul_colors(to: int, theme: dict[str, dict[str, str]], color_names: l
             else:
                 used_colors[color_name] -= 15
 
-        percentage = f"{used_colors[color_name]}%"
+        percentage = used_colors[color_name]
         new_colors.append(theme[color_name][percentage])
 
     return new_colors
@@ -114,7 +114,7 @@ class BarChart(Figure):
         **kwargs,
     ):
         if colors is None:
-            colors = fill_defaul_colors(len(data[x]), government_theme, quantitative_colors)
+            colors = fill_default_colors(len(data[x]), government_theme, quantitative_colors)
         else:
             colors = fill(len(data[x]), colors)
 
@@ -136,7 +136,7 @@ class PieChart(Figure):
         length = len(values)
 
         if colors is None:
-            colors = fill_defaul_colors(length, government_theme, quantitative_colors)
+            colors = fill_default_colors(length, government_theme, quantitative_colors)
         else:
             colors = fill(length, colors)
 
@@ -145,7 +145,8 @@ class PieChart(Figure):
             values=values,
             names=names,
             color=data[names],
-            color_discrete_sequence=fill(length, colors),
+            # color_discrete_sequence=fill(length, colors),
+            color_discrete_sequence=colors,
             **kwargs,
         )
         figure.update_layout(plot_bgcolor="white")
