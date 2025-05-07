@@ -25,7 +25,9 @@ def fill(to: int, colors: list[str]) -> list[str]:
     return new_colors
 
 
-def fill_default_colors(to: int, theme: dict[str, dict[str, str]], color_names: list[str]) -> list[str]:
+def fill_default_colors(
+    to: int, theme: dict[str, dict[str, str]], color_names: list[str]
+) -> list[str]:
     """Generates a list of colors based on a given `theme`, repeating color names and adjusting their intensity."""
 
     length = len(color_names)
@@ -114,7 +116,9 @@ class BarChart(Figure):
         **kwargs,
     ):
         if colors is None:
-            colors = fill_default_colors(len(data[x]), government_theme, quantitative_colors)
+            colors = fill_default_colors(
+                len(data[x]), government_theme, quantitative_colors
+            )
         else:
             colors = fill(len(data[x]), colors)
 
@@ -132,7 +136,9 @@ class BarChart(Figure):
 
 
 class PieChart(Figure):
-    def __init__(self, data, values: str, names: str, colors: list[str] = None, **kwargs):
+    def __init__(
+        self, data, values: str, names: str, colors: list[str] = None, **kwargs
+    ):
         length = len(values)
 
         if colors is None:
@@ -195,11 +201,16 @@ class Table(Figure):
 
 
 class ScatterPlot(Figure):
-    def __init__(self, figure=None, x: str | list = [], y: str | list = [], **kwargs):
+    def __init__(self, figure=None, x: str | list = [], y: str | list = [], colors: list = None, **kwargs):
+        if colors is None:
+            colors = fill_default_colors(
+                len(x), government_theme, quantitative_colors
+            )
+
         figure = px.scatter(
             x=x,
             y=y,
-            color=fill(len(x), [blue_colors[0], rubine_red[0]]),
+            color=colors,
             color_discrete_map="identity",
             **kwargs,
         )
@@ -208,12 +219,15 @@ class ScatterPlot(Figure):
 
 
 class Histogram(Figure):
-    def __init__(self, data, x: str, nbins: int = 10, **kwargs):
+    def __init__(self, data, x: str, nbins: int = 10, colors: list = None, **kwargs):
+        if colors is None:
+            colors = fill(len(data), [government_theme["Lintblauw"][100]])
+
         figure = px.histogram(
             data,
             x=x,
             nbins=nbins,
-            color=fill(len(data), [blue_colors[0]]),
+            color=colors,
             color_discrete_map="identity",
             **kwargs,
         )
@@ -221,15 +235,19 @@ class Histogram(Figure):
         super().__init__(figure)
 
 
-# TODO: make it easier to select a color for a line.
 class LineChart(Figure):
-    def __init__(self, data, x: str, y: str, color: str, **kwargs):
+    def __init__(self, data, x: str, y: str, column_to_color: str, colors: list = None, **kwargs):
+        if colors is None:
+            colors = fill_default_colors(
+                len(data[y]), government_theme, quantitative_colors
+            )
+
         figure = px.line(
             data,
             x=x,
             y=y,
-            color=color,
-            color_discrete_sequence=fill(len(data[y]), [blue_colors[0], rubine_red[0]]),
+            color=column_to_color,
+            color_discrete_sequence=colors,
             **kwargs,
         )
 
@@ -237,11 +255,17 @@ class LineChart(Figure):
 
 
 class BoxPlot(Figure):
-    def __init__(self, data, x: str, color: str, **kwargs):
+    def __init__(self, data, x: str, column_to_color: str, colors: list = None, **kwargs):
+        if colors is None:
+            colors = fill_default_colors(
+                len(data[column_to_color]), government_theme, quantitative_colors
+            )
+
         figure = px.box(
             data,
             x=x,
-            color=color,
+            color=column_to_color,
+            color_discrete_sequence=colors,
             **kwargs,
         )
 
