@@ -130,7 +130,6 @@ class BarChart(Figure):
             color_discrete_sequence=colors,
             **kwargs,
         )
-        figure.update_layout(plot_bgcolor="white")
 
         super().__init__(figure)
 
