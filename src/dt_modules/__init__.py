@@ -219,7 +219,7 @@ class ScatterPlot(Figure):
 
 
 class Histogram(Figure):
-    def __init__(self, data, x: str, nbins: int = 10, colors: list = None, **kwargs):
+    def __init__(self, data, x: str, nbins: int = 10, colors: list = None, x_label: str = None, y_label: str = None, **kwargs):
         if colors is None:
             colors = fill(len(data), [government_theme["Lintblauw"][100]])
 
@@ -230,6 +230,12 @@ class Histogram(Figure):
             color=colors,
             color_discrete_map="identity",
             **kwargs,
+        )
+
+        # Set axis labels
+        figure.update_layout(
+            xaxis_title=x_label or x,
+            yaxis_title=y_label
         )
 
         super().__init__(figure)

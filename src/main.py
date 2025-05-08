@@ -1,4 +1,5 @@
 import pandas as pd
+import plotly.express as px
 
 from dt_modules import BarChart, PieChart, Table, blue_colors, rubine_red, ScatterPlot, fill, Histogram, LineChart, BoxPlot
 
@@ -52,16 +53,14 @@ def main():
     table = Table(headers=headers, cells=cells, alternate_row=True)
     table.save_json("./exports/table.export.json")
 
-
-    import plotly.express as px
-
     # figure = px.scatter(x=[0, 1, 2, 3, 4], y=[0, 1, 4, 9, 16], color=fill(5, [blue_colors[2], rubine_red[2]]), color_discrete_map='identity')
     scatter = ScatterPlot(x=[0, 1, 2, 3, 4], y=[0, 1, 4, 9, 16])
     # scatter = ScatterPlot.figure(figure)
     scatter.save_json("./exports/scatter.export.json")
 
     df = px.data.tips()
-    histogram = Histogram(df, x="total_bill", nbins=10, title="test title")
+    histogram = Histogram(df, x="total_bill", nbins=10, title="test title", y_label="cost")
+    histogram.get_figure().show()
     # histogram.save_image("./exports/histogram.png")
     histogram.save_json("./exports/histogram.export.json")
 
@@ -69,8 +68,6 @@ def main():
     line_chart = LineChart(df, x="year", y="lifeExp", column_to_color="country")
     line_chart.save_json("./exports/line_chart.export.json")
     # line_chart.get_figure().show()
-
-    import plotly.express as px
 
     df = px.data.tips()
     # fig = px.box(df, x="time", y="total_bill", points="all")
