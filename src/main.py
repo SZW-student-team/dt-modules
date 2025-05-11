@@ -2,6 +2,7 @@ import pandas as pd
 import plotly.express as px
 
 from dt_modules import BarChart, PieChart, Table, blue_colors, rubine_red, ScatterPlot, fill, Histogram, LineChart, BoxPlot
+from demo import start
 
 def get_sectors():
     sectors = [
@@ -78,4 +79,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    # main()
+    start()

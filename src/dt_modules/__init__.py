@@ -154,7 +154,6 @@ class PieChart(Figure):
             color_discrete_sequence=colors,
             **kwargs,
         )
-        figure.update_layout(plot_bgcolor="white")
 
         super().__init__(figure)
 
@@ -194,7 +193,7 @@ class Table(Figure):
             ],
             **kwargs,
         )
-        figure.update_layout(plot_bgcolor="white")
+        # figure.update_layout(plot_bgcolor="white")
 
         super().__init__(figure)
 
@@ -231,7 +230,7 @@ class Histogram(Figure):
             **kwargs,
         )
 
-        # Set axis labels
+        # Set axis labels.
         figure.update_layout(
             xaxis_title=x_label or x,
             yaxis_title=y_label
