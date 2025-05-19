@@ -5,7 +5,7 @@ import plotly.express as px
 from dt_modules import BarChart, PieChart, Table, ScatterPlot, Histogram, BoxPlot
 
 
-def start():
+def start_old():
     data = {
         'sectoren': ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U'],
         'uitstroom': [63589, 7615, 689794, 22133, 34755, 335913, 894066, 304780, 162482, 198830, 234537, 57592, 409602, 493306, 472004, 398288, 884573, 74078, 103002, 12192, 630],
@@ -35,6 +35,23 @@ def start():
     df = px.data.tips()
     box_plot = BoxPlot(df, x="time", column_to_color="time", y="total_bill")
     box_plot.save_json("./exports/box_plot.export.json")
+
+
+def start():
+    data = {
+        'sectoren': ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U'],
+        'uitstroom': [63589, 7615, 689794, 22133, 34755, 335913, 894066, 304780, 162482, 198830, 234537, 57592, 409602, 493306, 472004, 398288, 884573, 74078, 103002, 12192, 630],
+        'sector_namen': get_sectors(),
+    }
+
+    df = pd.DataFrame(data)
+
+    # Voorbeeld code voor een pie chart.
+    # pie_chart = PieChart(data=df, values="uitstroom", names="sectoren")
+    # pie_chart.save_json("./exports/pie_chart.export.json")
+
+    bar_chart = BarChart(df, x="", y="", column_to_color="sectoren")
+    bar_chart.save_json("./exports/{vul naam hier}.export.json")
 
 
 def get_sectors():
