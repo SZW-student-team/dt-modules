@@ -131,7 +131,25 @@ class BarChart(Figure):
             **kwargs,
         )
 
+        self.data = data
+        self.x = x
+        self.y = y
         super().__init__(figure)
+
+    def save_json_v2(self):
+        portal_data = {
+            "chartType": "bar",
+            "dataframe": self.data.to_dict(),
+            "columns": list(self.data.columns),
+            # "x": self.x,
+            # "y": self.y,
+        }
+
+        figure_contents = json.loads(self.get_figure().to_json())
+        export_contents = { "portalData": portal_data, "figureContents": figure_contents }
+
+        with open("./exports/bar_chart_v2.export.json", "w") as f:
+            json.dump(export_contents, f)
 
 
 class PieChart(Figure):
