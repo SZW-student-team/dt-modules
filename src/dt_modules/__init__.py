@@ -8,7 +8,7 @@ import json
 from dt_modules.coloring import government_theme, quantitative_colors
 
 
-# TODO: add the colors to the coloring module.
+# TODO: remove all occurrences of these colors.
 blue_colors = ["#154273", "#4F7196", "#738EAB", "#95A9C0", "#B8C6D5", "#DCE3EA"]
 rubine_red = ["#CA005D", "#D74085", "#DF669D", "#E78CB6", "#EFB2CE", "#F7D9E7"]
 
@@ -200,7 +200,7 @@ class Table(Figure):
 
 
 class ScatterPlot(Figure):
-    def __init__(self, figure=None, x: str | list = [], y: str | list = [], colors: list = None, **kwargs):
+    def __init__(self, x: str | list = [], y: str | list = [], colors: list = None, **kwargs):
         if colors is None:
             colors = fill_default_colors(
                 len(x), government_theme, quantitative_colors
