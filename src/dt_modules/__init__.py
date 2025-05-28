@@ -71,8 +71,19 @@ class Savable(ABC):
     @abstractmethod
     def get_figure(self):
         """Returns a plotly figure, so the caller has full control over it's settings."""
-
         pass
+
+    # TODO: implement this.
+    # @abstractmethod
+    # def get_data(self):
+    #     """Returns the data which is used to create the plotly figure."""
+    #     pass
+
+    # TODO: implement this.
+    # @abstractmethod
+    # def get_chart_type(self) -> str:
+    #     """Returns what chart will can created."""
+    #     pass
 
     def save_image(self, location: str):
         """Saves the current figure as an image."""
@@ -86,6 +97,24 @@ class Savable(ABC):
 
         with open(location, "w") as f:
             json.dump(figure_contents, f)
+
+    # TODO: implement this.
+    # def save_json_v2(self, location: str):
+    #     """Saves a json representation of the current figure, which can be uploaded to the data portal."""
+
+    #     data = self.get_data()
+
+    #     portal_data = {
+    #         "chartType": self.get_chart_type(),
+    #         "dataframe": data.to_dict(),
+    #         "columns": list(data.columns),
+    #     }
+
+    #     figure_contents = json.loads(self.get_figure().to_json())
+    #     export_contents = { "portalData": portal_data, "figureContents": figure_contents }
+
+    #     with open(location, "w") as f:
+    #         json.dump(export_contents, f)
 
 
 class Figure(Savable):
@@ -132,23 +161,19 @@ class BarChart(Figure):
         )
 
         self.data = data
-        self.x = x
-        self.y = y
         super().__init__(figure)
 
-    def save_json_v2(self):
+    def save_json_v2(self, location: str):
         portal_data = {
             "chartType": "bar",
             "dataframe": self.data.to_dict(),
             "columns": list(self.data.columns),
-            # "x": self.x,
-            # "y": self.y,
         }
 
         figure_contents = json.loads(self.get_figure().to_json())
         export_contents = { "portalData": portal_data, "figureContents": figure_contents }
 
-        with open("./exports/bar_chart_v2.export.json", "w") as f:
+        with open(location, "w") as f:
             json.dump(export_contents, f)
 
 
@@ -173,8 +198,21 @@ class PieChart(Figure):
             **kwargs,
         )
 
+        self.data = data
         super().__init__(figure)
 
+    def save_json_v2(self, location: str):
+        portal_data = {
+            "chartType": "pie",
+            "dataframe": self.data.to_dict(),
+            "columns": list(self.data.columns),
+        }
+
+        figure_contents = json.loads(self.get_figure().to_json())
+        export_contents = { "portalData": portal_data, "figureContents": figure_contents }
+
+        with open(location, "w") as f:
+            json.dump(export_contents, f)
 
 class Table(Figure):
     def __init__(
@@ -211,9 +249,21 @@ class Table(Figure):
             ],
             **kwargs,
         )
-        # figure.update_layout(plot_bgcolor="white")
 
+        self.headers = headers
         super().__init__(figure)
+
+    def save_json_v2(self, location: str):
+        portal_data = {
+            "chartType": "table",
+            "columns": list(self.headers),
+        }
+
+        figure_contents = json.loads(self.get_figure().to_json())
+        export_contents = { "portalData": portal_data, "figureContents": figure_contents }
+
+        with open(location, "w") as f:
+            json.dump(export_contents, f)
 
 
 class ScatterPlot(Figure):
