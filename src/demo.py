@@ -50,7 +50,7 @@ def start():
     pie_chart = PieChart(data=df, values="uitstroom", names="sectoren")
     pie_chart.save_json_v2("./exports/pie_chart_v2.export.json")
 
-    bar_chart = BarChart(df, x="sectoren", y="uitstroom", column_to_color="sectoren")
+    bar_chart = BarChart(df.head(3), x="sectoren", y="uitstroom", column_to_color="sectoren")
     bar_chart.save_json_v2("./exports/bar_chart_v2.export.json")
     # bar_chart.save_json("./exports/bar_chart.export.json")
 
