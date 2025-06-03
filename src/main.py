@@ -55,8 +55,9 @@ def main():
     table.save_json("./exports/table.export.json")
 
     # figure = px.scatter(x=[0, 1, 2, 3, 4], y=[0, 1, 4, 9, 16], color=fill(5, [blue_colors[2], rubine_red[2]]), color_discrete_map='identity')
-    scatter = ScatterPlot(x=[0, 1, 2, 3, 4], y=[0, 1, 4, 9, 16])
     # scatter = ScatterPlot.figure(figure)
+    scatter_df = pd.DataFrame(data={"x": [0, 1, 2, 3, 4], "y": [0, 1, 4, 9, 16]})
+    scatter = ScatterPlot(scatter_df, x="x", y="y")
     scatter.save_json("./exports/scatter.export.json")
 
     df = px.data.tips()

@@ -66,6 +66,12 @@ def start():
     line_chart = LineChart(df, x="year", y="lifeExp", column_to_color="country")
     line_chart.save_json_v2("./exports/line_chart_v2.export.json")
 
+    # Scatter
+    scatter_df = pd.DataFrame(data={"x": [0, 1, 2, 3, 4], "y": [0, 1, 4, 9, 16]})
+    scatter = ScatterPlot(scatter_df, x="x", y="y")
+    # scatter.get_figure().show()
+    scatter.save_json_v2("./exports/scatter_v2.export.json")
+
 def get_sectors():
     sectors = [
         "Landbouw, bosbouw en visserij",

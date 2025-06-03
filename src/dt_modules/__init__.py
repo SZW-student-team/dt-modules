@@ -284,21 +284,43 @@ class Table(Figure):
 
 
 class ScatterPlot(Figure):
-    def __init__(self, x: str | list = [], y: str | list = [], colors: list = None, **kwargs):
+    def __init__(self, data, x: str, y: str, colors: list = None, **kwargs):
         if colors is None:
             colors = fill_default_colors(
-                len(x), government_theme, quantitative_colors
+                len(data[x]), government_theme, quantitative_colors
             )
 
         figure = px.scatter(
-            x=x,
-            y=y,
+            x=data[x],
+            y=data[y],
             color=colors,
             color_discrete_map="identity",
             **kwargs,
         )
 
+        self.data = data
+        self.colors = colors
+        self.x = x
+        self.y = y
         super().__init__(figure)
+
+    def save_json_v2(self, location: str):
+        parameters = {
+            "chartType": "scatter",
+            "dataframe": self.data.to_dict(),
+            "length": self.data.shape[0],
+            "colors": self.colors,
+            "columns": [self.x, self.y],
+            "x": self.x,
+            "y": self.y,
+        }
+
+        self.data.to_excel("exports/scatter.export.xlsx")
+        figure_contents = json.loads(self.get_figure().to_json())
+        export_contents = { "parameters": parameters, "figureContents": figure_contents }
+
+        with open(location, "w") as f:
+            json.dump(export_contents, f)
 
 
 class Histogram(Figure):
