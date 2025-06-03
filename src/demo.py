@@ -2,7 +2,7 @@ import pandas as pd
 import plotly.express as px
 
 
-from dt_modules import BarChart, PieChart, Table, ScatterPlot, Histogram, BoxPlot
+from dt_modules import BarChart, LineChart, PieChart, Table, ScatterPlot, Histogram, BoxPlot
 
 
 def start_old():
@@ -46,10 +46,11 @@ def start():
 
     df = pd.DataFrame(data)
 
-    # Voorbeeld code voor een pie chart.
+    # Pie
     pie_chart = PieChart(data=df, values="uitstroom", names="sectoren")
     pie_chart.save_json_v2("./exports/pie_chart_v2.export.json")
 
+    # Bar
     bar_chart = BarChart(df.head(3), x="sectoren", y="uitstroom", column_to_color="sectoren")
     bar_chart.save_json_v2("./exports/bar_chart_v2.export.json")
     # bar_chart.save_json("./exports/bar_chart.export.json")
@@ -60,6 +61,10 @@ def start():
     table = Table(headers=headers, cells=cells, alternate_row=True)
     table.save_json_v2("./exports/table.export.json")
 
+    # Line
+    df = px.data.gapminder().query("continent == 'Oceania'")
+    line_chart = LineChart(df, x="year", y="lifeExp", column_to_color="country")
+    line_chart.save_json_v2("./exports/line_chart_v2.export.json")
 
 def get_sectors():
     sectors = [

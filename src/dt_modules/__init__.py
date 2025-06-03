@@ -340,7 +340,33 @@ class LineChart(Figure):
             **kwargs,
         )
 
+        self.data = data
+        self.length = data[column_to_color].unique().shape[0]
+        self.colors = colors
+        self.column_to_color = column_to_color
+        self.x = x
+        self.y = y
         super().__init__(figure)
+
+    def save_json_v2(self, location: str):
+        parameters = {
+            "chartType": "line",
+            "dataframe": self.data.to_dict(),
+            "length": self.length,
+            "columns": list(self.data.columns),
+            "colors": self.colors,
+            "columnToColor": self.column_to_color,
+            "x": self.x,
+            "y": self.y,
+        }
+
+        figure_contents = json.loads(self.get_figure().to_json())
+        export_contents = { "parameters": parameters, "figureContents": figure_contents }
+
+        self.data.to_excel("line_chart.exports.xlsx")
+
+        with open(location, "w") as f:
+            json.dump(export_contents, f)
 
 
 class BoxPlot(Figure):
