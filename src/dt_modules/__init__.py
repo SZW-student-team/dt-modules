@@ -161,10 +161,10 @@ class BarChart(Figure):
         )
 
         self.data = data
-        self.x = x
-        self.y = y
         self.colors = colors
         self.column_to_color = column_to_color
+        self.x = x
+        self.y = y
         super().__init__(figure)
 
     def save_json_v2(self, location: str):
@@ -173,10 +173,10 @@ class BarChart(Figure):
             "dataframe": self.data.to_dict(),
             "length": self.data.shape[0],
             "columns": list(self.data.columns),
+            "colors": self.colors,
             "columnToColor": self.column_to_color,
             "x": self.x,
             "y": self.y,
-            "colors": self.colors,
         }
 
         figure_contents = json.loads(self.get_figure().to_json())
@@ -207,17 +207,26 @@ class PieChart(Figure):
         )
 
         self.data = data
+        self.colors = colors
+        self.column_to_color = names
+        self.x = values
+        self.y = names
         super().__init__(figure)
 
     def save_json_v2(self, location: str):
-        portal_data = {
+        parameters = {
             "chartType": "pie",
             "dataframe": self.data.to_dict(),
+            "length": self.data.shape[0],
             "columns": list(self.data.columns),
+            "colors": self.colors,
+            "columnToColor": self.column_to_color,
+            "x": self.x,
+            "y": self.y,
         }
 
         figure_contents = json.loads(self.get_figure().to_json())
-        export_contents = { "portalData": portal_data, "figureContents": figure_contents }
+        export_contents = { "parameters": parameters, "figureContents": figure_contents }
 
         with open(location, "w") as f:
             json.dump(export_contents, f)
