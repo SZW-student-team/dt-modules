@@ -326,14 +326,13 @@ class ScatterPlot(Figure):
 class Histogram(Figure):
     def __init__(self, data, x: str, nbins: int = 10, colors: list = None, x_label: str = None, y_label: str = None, **kwargs):
         if colors is None:
-            colors = fill(len(data), [government_theme["Lintblauw"][100]])
+            colors = [government_theme["Lintblauw"][100]]
 
         figure = px.histogram(
             data,
             x=x,
             nbins=nbins,
-            color=colors,
-            color_discrete_map="identity",
+            color_discrete_sequence=colors,
             **kwargs,
         )
 
@@ -343,7 +342,31 @@ class Histogram(Figure):
             yaxis_title=y_label
         )
 
+        self.data = data
+        self.colors = colors
+        self.nbins = nbins
+        self.x = x
+        self.x_label = x_label or x
+        self.y_label = y_label
         super().__init__(figure)
+
+    def save_json_v2(self, location: str):
+        parameters = {
+            "chartType": "histogram",
+            "dataframe": self.data.to_dict(),
+            "columns": list(self.data.columns),
+            "nbins": self.nbins,
+            "colors": self.colors,
+            "x": self.x,
+            "xLabel": self.x_label,
+            "yLabel": self.y_label,
+        }
+
+        figure_contents = json.loads(self.get_figure().to_json())
+        export_contents = { "parameters": parameters, "figureContents": figure_contents }
+
+        with open(location, "w") as f:
+            json.dump(export_contents, f)
 
 
 class LineChart(Figure):

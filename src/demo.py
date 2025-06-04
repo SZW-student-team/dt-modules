@@ -46,31 +46,39 @@ def start():
 
     df = pd.DataFrame(data)
 
-    # Pie
-    pie_chart = PieChart(data=df, values="uitstroom", names="sectoren")
-    pie_chart.save_json_v2("./exports/pie_chart_v2.export.json")
+    # # Pie
+    # pie_chart = PieChart(data=df, values="uitstroom", names="sectoren")
+    # pie_chart.save_json_v2("./exports/pie_chart_v2.export.json")
 
-    # Bar
-    bar_chart = BarChart(df.head(3), x="sectoren", y="uitstroom", column_to_color="sectoren")
-    bar_chart.save_json_v2("./exports/bar_chart_v2.export.json")
-    # bar_chart.save_json("./exports/bar_chart.export.json")
+    # # Bar
+    # bar_chart = BarChart(df.head(3), x="sectoren", y="uitstroom", column_to_color="sectoren")
+    # bar_chart.save_json_v2("./exports/bar_chart_v2.export.json")
+    # # bar_chart.save_json("./exports/bar_chart.export.json")
 
-    # Table
-    headers = ["Letters", "Beschrijvingen"]
-    cells = [df["sectoren"].head(5), df["sector_namen"].head(5)]
-    table = Table(headers=headers, cells=cells, alternate_row=True)
-    table.save_json_v2("./exports/table.export.json")
+    # # Table
+    # headers = ["Letters", "Beschrijvingen"]
+    # cells = [df["sectoren"].head(5), df["sector_namen"].head(5)]
+    # table = Table(headers=headers, cells=cells, alternate_row=True)
+    # table.save_json_v2("./exports/table.export.json")
 
-    # Line
-    df = px.data.gapminder().query("continent == 'Oceania'")
-    line_chart = LineChart(df, x="year", y="lifeExp", column_to_color="country")
-    line_chart.save_json_v2("./exports/line_chart_v2.export.json")
+    # # Line
+    # df = px.data.gapminder().query("continent == 'Oceania'")
+    # line_chart = LineChart(df, x="year", y="lifeExp", column_to_color="country")
+    # line_chart.save_json_v2("./exports/line_chart_v2.export.json")
 
-    # Scatter
-    scatter_df = pd.DataFrame(data={"x": [0, 1, 2, 3, 4], "y": [0, 1, 4, 9, 16]})
-    scatter = ScatterPlot(scatter_df, x="x", y="y")
-    # scatter.get_figure().show()
-    scatter.save_json_v2("./exports/scatter_v2.export.json")
+    # # Scatter
+    # scatter_df = pd.DataFrame(data={"x": [0, 1, 2, 3, 4], "y": [0, 1, 4, 9, 16]})
+    # scatter = ScatterPlot(scatter_df, x="x", y="y")
+    # # scatter.get_figure().show()
+    # scatter.save_json_v2("./exports/scatter_v2.export.json")
+
+    # Histogram
+    df = px.data.tips()
+    print(df.dtypes)
+    print(df)
+    histogram = Histogram(df, x="total_bill", nbins=10, title="test title", y_label="cost", colors=["#CA005D"])
+    # histogram.get_figure().show()
+    histogram.save_json_v2("./exports/histogram_v2.export.json")
 
 def get_sectors():
     sectors = [
