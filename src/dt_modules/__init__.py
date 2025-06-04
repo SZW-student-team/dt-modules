@@ -458,3 +458,41 @@ class BoxPlot(Figure):
 
         with open(location, "w") as f:
             json.dump(export_contents, f)
+
+
+class HeatMap(Figure):
+    def __init__(self, data, x: str, y: str, value_column: str, color_continuous_scale: str | list = None, **kwargs):
+        if color_continuous_scale is None:
+            color_continuous_scale = "Viridis"
+
+        heatmap_data = data.pivot(index=x, columns=y, values=value_column)
+        figure = px.imshow(
+            heatmap_data,
+            labels=dict(x=x, y=y, color=value_column),
+            color_continuous_scale=color_continuous_scale,
+        )
+
+        self.data = data
+        self.x = x
+        self.y = y
+        self.value_column = value_column
+        self.color_continuous_scale = color_continuous_scale
+        super().__init__(figure)
+
+    def save_json_v2(self, location: str):
+        parameters = {
+            "chartType": "heatmap",
+            "dataframe": self.data.to_dict(),
+            "length": self.data.shape[0],
+            "columns": list(self.data.columns),
+            "x": self.x,
+            "y": self.y,
+            "valueColumn": self.value_column,
+            "colorContinuousScale": self.color_continuous_scale,
+        }
+
+        figure_contents = json.loads(self.get_figure().to_json())
+        export_contents = { "parameters": parameters, "figureContents": figure_contents }
+
+        with open(location, "w") as f:
+            json.dump(export_contents, f)

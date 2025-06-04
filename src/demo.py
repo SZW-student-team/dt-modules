@@ -2,7 +2,7 @@ import pandas as pd
 import plotly.express as px
 
 
-from dt_modules import BarChart, LineChart, PieChart, Table, ScatterPlot, Histogram, BoxPlot
+from dt_modules import BarChart, LineChart, PieChart, Table, ScatterPlot, Histogram, BoxPlot, HeatMap
 
 
 def start_old():
@@ -78,10 +78,29 @@ def start():
     # histogram.save_json_v2("./exports/histogram_v2.export.json")
 
     # Boxplot
-    box_plot = BoxPlot(df, x="time", column_to_color="time", y="total_bill")
+    # box_plot = BoxPlot(df, x="time", column_to_color="time", y="total_bill")
     # box_plot.get_figure().show()
     # box_plot.save_image("./exports/box_plot.png")
-    box_plot.save_json_v2("./exports/box_plot_v2.export.json")
+    # box_plot.save_json_v2("./exports/box_plot_v2.export.json")
+
+    heatmap_data = get_heatmap_data()
+    df = pd.DataFrame(heatmap_data)
+    heatmap = HeatMap(df, x="nation", y="medal", value_column="count")
+    heatmap.save_json_v2("exports/heatmap_v2.export.json")
+    # heatmap.get_figure().show()
+
+def get_heatmap_data():
+    return [
+        {"nation": "South Korea", "medal": "gold", "count": 24},
+        {"nation": "South Korea", "medal": "silver", "count": 13},
+        {"nation": "South Korea", "medal": "bronze", "count": 11},
+        {"nation": "China", "medal": "gold", "count": 10},
+        {"nation": "China", "medal": "silver", "count": 15},
+        {"nation": "China", "medal": "bronze", "count": 8},
+        {"nation": "Canada", "medal": "gold", "count": 9},
+        {"nation": "Canada", "medal": "silver", "count": 12},
+        {"nation": "Canada", "medal": "bronze", "count": 12},
+    ]
 
 def get_sectors():
     sectors = [
