@@ -74,11 +74,14 @@ def start():
 
     # Histogram
     df = px.data.tips()
-    print(df.dtypes)
-    print(df)
-    histogram = Histogram(df, x="total_bill", nbins=10, title="test title", y_label="cost", colors=["#CA005D"])
-    # histogram.get_figure().show()
-    histogram.save_json_v2("./exports/histogram_v2.export.json")
+    # histogram = Histogram(df, x="total_bill", nbins=10, title="test title", y_label="cost", colors=["#CA005D"])
+    # histogram.save_json_v2("./exports/histogram_v2.export.json")
+
+    # Boxplot
+    box_plot = BoxPlot(df, x="time", column_to_color="time", y="total_bill")
+    # box_plot.get_figure().show()
+    # box_plot.save_image("./exports/box_plot.png")
+    box_plot.save_json_v2("./exports/box_plot_v2.export.json")
 
 def get_sectors():
     sectors = [

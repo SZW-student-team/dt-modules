@@ -415,18 +415,46 @@ class LineChart(Figure):
 
 
 class BoxPlot(Figure):
-    def __init__(self, data, x: str, column_to_color: str, colors: list = None, **kwargs):
+    def __init__(self, data, x: str, y: str, column_to_color: str, colors: list = None, **kwargs):
+        length = data[column_to_color].unique().shape[0]
+
         if colors is None:
             colors = fill_default_colors(
-                len(data[column_to_color]), government_theme, quantitative_colors
+                length, government_theme, quantitative_colors
             )
 
         figure = px.box(
             data,
             x=x,
+            y=y,
             color=column_to_color,
             color_discrete_sequence=colors,
             **kwargs,
         )
 
+        data.to_excel("exports/boxplot_v2.exports.xlsx")
+        self.data = data
+        self.length = length
+        self.colors = colors
+        self.column_to_color = column_to_color
+        self.x = x
+        self.y = y
         super().__init__(figure)
+
+    def save_json_v2(self, location: str):
+        parameters = {
+            "chartType": "box",
+            "dataframe": self.data.to_dict(),
+            "columns": list(self.data.columns),
+            "length": self.length,
+            "colors": self.colors,
+            "columnToColor": self.column_to_color,
+            "x": self.x,
+            "y": self.y,
+        }
+
+        figure_contents = json.loads(self.get_figure().to_json())
+        export_contents = { "parameters": parameters, "figureContents": figure_contents }
+
+        with open(location, "w") as f:
+            json.dump(export_contents, f)
