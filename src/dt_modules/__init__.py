@@ -315,7 +315,6 @@ class ScatterPlot(Figure):
             "y": self.y,
         }
 
-        self.data.to_excel("exports/scatter.export.xlsx")
         figure_contents = json.loads(self.get_figure().to_json())
         export_contents = { "parameters": parameters, "figureContents": figure_contents }
 
@@ -408,8 +407,6 @@ class LineChart(Figure):
         figure_contents = json.loads(self.get_figure().to_json())
         export_contents = { "parameters": parameters, "figureContents": figure_contents }
 
-        self.data.to_excel("line_chart.exports.xlsx")
-
         with open(location, "w") as f:
             json.dump(export_contents, f)
 
@@ -432,7 +429,6 @@ class BoxPlot(Figure):
             **kwargs,
         )
 
-        data.to_excel("exports/boxplot_v2.exports.xlsx")
         self.data = data
         self.length = length
         self.colors = colors
