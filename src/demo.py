@@ -47,7 +47,8 @@ def start():
     df = pd.DataFrame(data)
 
     # Bar
-    bar_chart = BarChart(df, x="sectoren", y="uitstroom", column_to_color="sectoren")
+    bar_df = df.sort_values(by=["uitstroom"])
+    bar_chart = BarChart(bar_df.head(5), x="sectoren", y="uitstroom", column_to_color="sectoren")
     bar_chart.save_json_v2("./exports/bar_chart.export.json")
     # bar_chart.save_json("./exports/bar_chart.export.json")
 
@@ -88,22 +89,37 @@ def start():
 
     heatmap_data = get_heatmap_data()
     df = pd.DataFrame(heatmap_data)
-    heatmap = HeatMap(df, x="nation", y="medal", value_column="count")
+    # heatmap = HeatMap(df, x="nation", y="medal", value_column="count")
+    heatmap = HeatMap(df, x="provincie", y="sector", value_column="werkloosheid")
     heatmap.save_json_v2("exports/heatmap.export.json")
     heatmap.data.to_excel("exports/heatmap.export.xlsx")
     # heatmap.get_figure().show()
 
 def get_heatmap_data():
     return [
-        {"nation": "South Korea", "medal": "gold", "count": 24},
-        {"nation": "South Korea", "medal": "silver", "count": 13},
-        {"nation": "South Korea", "medal": "bronze", "count": 11},
-        {"nation": "China", "medal": "gold", "count": 10},
-        {"nation": "China", "medal": "silver", "count": 15},
-        {"nation": "China", "medal": "bronze", "count": 8},
-        {"nation": "Canada", "medal": "gold", "count": 9},
-        {"nation": "Canada", "medal": "silver", "count": 12},
-        {"nation": "Canada", "medal": "bronze", "count": 12},
+        # Zuid-Holland
+        {"provincie": "Zuid-Holland", "sector": "Bouw", "werkloosheid": 5.2},
+        {"provincie": "Zuid-Holland", "sector": "Zorg", "werkloosheid": 3.1},
+        {"provincie": "Zuid-Holland", "sector": "Onderwijs", "werkloosheid": 2.8},
+        {"provincie": "Zuid-Holland", "sector": "ICT", "werkloosheid": 4.0},
+
+        # Noord-Holland
+        {"provincie": "Noord-Holland", "sector": "Bouw", "werkloosheid": 4.9},
+        {"provincie": "Noord-Holland", "sector": "Zorg", "werkloosheid": 2.7},
+        {"provincie": "Noord-Holland", "sector": "Onderwijs", "werkloosheid": 2.5},
+        {"provincie": "Noord-Holland", "sector": "ICT", "werkloosheid": 3.8},
+
+        # Utrecht
+        {"provincie": "Utrecht", "sector": "Bouw", "werkloosheid": 4.5},
+        {"provincie": "Utrecht", "sector": "Zorg", "werkloosheid": 2.9},
+        {"provincie": "Utrecht", "sector": "Onderwijs", "werkloosheid": 2.6},
+        {"provincie": "Utrecht", "sector": "ICT", "werkloosheid": 3.2},
+
+        # Noord-Brabant
+        {"provincie": "Noord-Brabant", "sector": "Bouw", "werkloosheid": 5.5},
+        {"provincie": "Noord-Brabant", "sector": "Zorg", "werkloosheid": 3.3},
+        {"provincie": "Noord-Brabant", "sector": "Onderwijs", "werkloosheid": 3.0},
+        {"provincie": "Noord-Brabant", "sector": "ICT", "werkloosheid": 4.4},
     ]
 
 def get_sectors():
