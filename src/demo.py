@@ -56,12 +56,6 @@ def start():
     pie_chart = PieChart(data=df, values="uitstroom", names="sectoren")
     pie_chart.save_json_v2("./exports/pie_chart.export.json")
 
-    # # Table
-    # headers = ["Letters", "Beschrijvingen"]
-    # cells = [df["sectoren"].head(5), df["sector_namen"].head(5)]
-    # table = Table(headers=headers, cells=cells, alternate_row=True)
-    # table.save_json_v2("./exports/table.export.json")
-
     # Line
     df = px.data.gapminder().query("continent == 'Oceania'")
     line_chart = LineChart(df, x="year", y="lifeExp", column_to_color="country")

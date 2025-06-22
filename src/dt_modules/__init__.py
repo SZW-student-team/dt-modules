@@ -287,14 +287,13 @@ class ScatterPlot(Figure):
     def __init__(self, data, x: str, y: str, colors: list = None, **kwargs):
         if colors is None:
             colors = fill_default_colors(
-                len(data[x]), government_theme, quantitative_colors
+                1, government_theme, quantitative_colors
             )
 
         figure = px.scatter(
             x=data[x],
             y=data[y],
-            color=colors,
-            color_discrete_map="identity",
+            color_discrete_sequence=colors,
             **kwargs,
         )
 
