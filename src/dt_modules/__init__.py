@@ -73,48 +73,11 @@ class Savable(ABC):
         """Returns a plotly figure, so the caller has full control over it's settings."""
         pass
 
-    # TODO: implement this.
-    # @abstractmethod
-    # def get_data(self):
-    #     """Returns the data which is used to create the plotly figure."""
-    #     pass
-
-    # TODO: implement this.
-    # @abstractmethod
-    # def get_chart_type(self) -> str:
-    #     """Returns what chart will can created."""
-    #     pass
-
-    def save_image(self, location: str):
-        """Saves the current figure as an image."""
-
-        self.get_figure().write_image(location)
-
+    @abstractmethod
     def save_json(self, location: str):
         """Saves a json representation of the current figure, which can be uploaded to the data portal."""
 
-        figure_contents = json.loads(self.get_figure().to_json())
-
-        with open(location, "w") as f:
-            json.dump(figure_contents, f)
-
-    # TODO: implement this.
-    # def save_json_v2(self, location: str):
-    #     """Saves a json representation of the current figure, which can be uploaded to the data portal."""
-
-    #     data = self.get_data()
-
-    #     portal_data = {
-    #         "chartType": self.get_chart_type(),
-    #         "dataframe": data.to_dict(),
-    #         "columns": list(data.columns),
-    #     }
-
-    #     figure_contents = json.loads(self.get_figure().to_json())
-    #     export_contents = { "portalData": portal_data, "figureContents": figure_contents }
-
-    #     with open(location, "w") as f:
-    #         json.dump(export_contents, f)
+        pass
 
 
 class Figure(Savable):
@@ -167,7 +130,7 @@ class BarChart(Figure):
         self.y = y
         super().__init__(figure)
 
-    def save_json_v2(self, location: str):
+    def save_json(self, location: str):
         parameters = {
             "chartType": "bar",
             "dataframe": self.data.to_dict(),
@@ -213,7 +176,7 @@ class PieChart(Figure):
         self.y = names
         super().__init__(figure)
 
-    def save_json_v2(self, location: str):
+    def save_json(self, location: str):
         parameters = {
             "chartType": "pie",
             "dataframe": self.data.to_dict(),
@@ -270,7 +233,7 @@ class Table(Figure):
         self.headers = headers
         super().__init__(figure)
 
-    def save_json_v2(self, location: str):
+    def save_json(self, location: str):
         portal_data = {
             "chartType": "table",
             "columns": list(self.headers),
@@ -303,7 +266,7 @@ class ScatterPlot(Figure):
         self.y = y
         super().__init__(figure)
 
-    def save_json_v2(self, location: str):
+    def save_json(self, location: str):
         parameters = {
             "chartType": "scatter",
             "dataframe": self.data.to_dict(),
@@ -348,7 +311,7 @@ class Histogram(Figure):
         self.y_label = y_label
         super().__init__(figure)
 
-    def save_json_v2(self, location: str):
+    def save_json(self, location: str):
         parameters = {
             "chartType": "histogram",
             "dataframe": self.data.to_dict(),
@@ -391,7 +354,7 @@ class LineChart(Figure):
         self.y = y
         super().__init__(figure)
 
-    def save_json_v2(self, location: str):
+    def save_json(self, location: str):
         parameters = {
             "chartType": "line",
             "dataframe": self.data.to_dict(),
@@ -436,7 +399,7 @@ class BoxPlot(Figure):
         self.y = y
         super().__init__(figure)
 
-    def save_json_v2(self, location: str):
+    def save_json(self, location: str):
         parameters = {
             "chartType": "box",
             "dataframe": self.data.to_dict(),
@@ -474,7 +437,7 @@ class HeatMap(Figure):
         self.color_continuous_scale = color_continuous_scale
         super().__init__(figure)
 
-    def save_json_v2(self, location: str):
+    def save_json(self, location: str):
         parameters = {
             "chartType": "heatmap",
             "dataframe": self.data.to_dict(),
