@@ -1,5 +1,5 @@
 # Dt-modules
-[Insert about text.]
+This repository provides building blocks (or modules) for quickly creating Plotly visualizations.
 
 ## Setup
 1. install the `uv` package manager.
@@ -13,6 +13,9 @@
 
 ### Module usage:
 ```python
+    import pandas as pd
+    from dt_modules import BarChart
+
     # Collect data to visualize.
     data = {
         'sectoren': ['A', 'B', 'C', 'D', 'E'],
@@ -31,6 +34,8 @@
 
 #### Overwriting values
 ```python
+    from dt_modules import BarChart, government_theme
+
     # Overwrite the default colors with values from the government theme.
     colors = [government_theme["Lintblauw"][100], government_theme["Oranje"][100], government_theme["Mosgroen"][100]]
 
