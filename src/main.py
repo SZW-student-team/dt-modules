@@ -1,8 +1,9 @@
 import pandas as pd
 import plotly.express as px
+import json
 
 
-from dt_modules import BarChart, LineChart, PieChart, ScatterPlot, Histogram, BoxPlot, HeatMap
+from dt_modules import BarChart, LineChart, PieChart, ScatterPlot, Histogram, BoxPlot, HeatMap, Figure, fill, fill_default_colors, government_theme, quantitative_colors
 
 
 def get_heatmap_data():
@@ -59,6 +60,59 @@ def get_sectors():
 
     return sectors
 
+class CustomChart(Figure):
+    def __init__(
+        self,
+        data,
+        x: str,
+        y: str,
+        values: str,
+        column_to_color: str,
+        colors: list[str] | None = None,
+        **kwargs,
+    ):
+
+        if colors is None:
+            colors = fill_default_colors(
+                len(data[x]), government_theme, quantitative_colors
+            )
+        else:
+            colors = fill(len(data[x]), colors)
+
+        figure = px.sunburst(
+            data,
+            names=x,
+            parents=y,
+            values=values,
+            color=column_to_color,
+            color_discrete_sequence=colors,
+            **kwargs,
+        )
+
+        self.data = data
+        self.colors = colors
+        self.column_to_color = column_to_color
+        self.x = x
+        self.y = y
+        super().__init__(figure)
+
+    def save_json(self, location: str):
+        parameters = {
+            "chartType": "custom",
+            "dataframe": self.data.to_dict(),
+            "length": self.data.shape[0],
+            "columns": list(self.data.columns),
+            "colors": self.colors,
+            "columnToColor": self.column_to_color,
+            "x": self.x,
+            "y": self.y,
+        }
+
+        figure_contents = json.loads(self.get_figure().to_json())
+        export_contents = { "parameters": parameters, "figureContents": figure_contents }
+
+        with open(location, "w") as f:
+            json.dump(export_contents, f)
 
 def main():
     data = {
@@ -68,6 +122,15 @@ def main():
     }
 
     df = pd.DataFrame(data)
+
+    # Custom chart
+    data = dict(
+        character=["Eve", "Cain", "Seth", "Enos", "Noam", "Abel", "Awan", "Enoch", "Azura"],
+        parent=["", "Eve", "Eve", "Seth", "Seth", "Eve", "Eve", "Awan", "Eve" ],
+        value=[10, 14, 12, 10, 2, 6, 6, 4, 4])
+    df_custom = pd.DataFrame(data)
+    custom_chart = CustomChart(data=df_custom, x='character', y='parent', values='value', column_to_color='character')
+    custom_chart.save_json("./exports/sunburst_chart.export.json")
 
     # Bar
     bar_df = df.sort_values(by=["uitstroom"])
