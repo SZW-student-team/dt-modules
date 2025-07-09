@@ -123,15 +123,6 @@ def main():
 
     df = pd.DataFrame(data)
 
-    # Custom chart
-    data = dict(
-        character=["Eve", "Cain", "Seth", "Enos", "Noam", "Abel", "Awan", "Enoch", "Azura"],
-        parent=["", "Eve", "Eve", "Seth", "Seth", "Eve", "Eve", "Awan", "Eve" ],
-        value=[10, 14, 12, 10, 2, 6, 6, 4, 4])
-    df_custom = pd.DataFrame(data)
-    custom_chart = CustomChart(data=df_custom, x='character', y='parent', values='value', column_to_color='character')
-    custom_chart.save_json("./exports/sunburst_chart.export.json")
-
     # Bar
     bar_df = df.sort_values(by=["uitstroom"])
     bar_chart = BarChart(bar_df.head(5), x="sectoren", y="uitstroom", column_to_color="sectoren")
@@ -172,6 +163,15 @@ def main():
     heatmap = HeatMap(df, x="provincie", y="sector", value_column="werkloosheid")
     heatmap.save_json("exports/heatmap.export.json")
     heatmap.data.to_excel("exports/heatmap.export.xlsx")
+
+    # Custom chart
+    data = dict(
+        character=["Eve", "Cain", "Seth", "Enos", "Noam", "Abel", "Awan", "Enoch", "Azura"],
+        parent=["", "Eve", "Eve", "Seth", "Seth", "Eve", "Eve", "Awan", "Eve" ],
+        value=[10, 14, 12, 10, 2, 6, 6, 4, 4])
+    df_custom = pd.DataFrame(data)
+    custom_chart = CustomChart(data=df_custom, x='character', y='parent', values='value', column_to_color='character')
+    custom_chart.save_json("./exports/sunburst_chart.export.json")
 
 if __name__ == "__main__":
     main()
